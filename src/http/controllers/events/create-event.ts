@@ -1,3 +1,4 @@
+import { EventAlreadyExistsError } from '@/use-cases/erros/event-already-exists-error';
 import { makeCreateEventUseCase } from '@/use-cases/factories/make-create-event-use-case';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import z from 'zod';
@@ -24,7 +25,13 @@ export async function createEvent(
       details,
       maximumAttendees,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof EventAlreadyExistsError) {
+      reply.status(409).send({
+        message: error.message,
+      });
+    }
+
     throw error;
   }
 

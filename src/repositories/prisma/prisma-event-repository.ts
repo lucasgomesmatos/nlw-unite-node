@@ -13,4 +13,12 @@ export class PrismaEventRepository implements EventRepository {
       },
     });
   }
+
+  async findBySlug(slug: string) {
+    return prisma.event.findUnique({
+      where: {
+        slug,
+      },
+    });
+  }
 }

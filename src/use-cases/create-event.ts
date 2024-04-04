@@ -1,5 +1,6 @@
 import { EventRepository } from '@/repositories/event-repository';
 import { generateSlug } from '@/utils/generate-slug';
+import { EventAlreadyExistsError } from './erros/event-already-exists-error';
 
 interface CreateEventRequest {
   title: string;
@@ -15,11 +16,19 @@ export class CreateEventUseCase {
     details,
     maximumAttendees,
   }: CreateEventRequest): Promise<void> {
+    const slug = generateSlug(title);
+
+    const eventExists = await this.eventRepository.findBySlug(slug);
+
+    if (eventExists) {
+      throw new EventAlreadyExistsError();
+    }
+
     const event = {
       title,
       details,
       maximumAttendees,
-      slug: generateSlug(title),
+      slug,
     };
 
     await this.eventRepository.save(event);
