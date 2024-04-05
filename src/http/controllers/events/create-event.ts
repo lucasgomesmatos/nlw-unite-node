@@ -27,7 +27,7 @@ export async function createEvent(
     });
   } catch (error: unknown) {
     if (error instanceof EventAlreadyExistsError) {
-      reply.status(409).send({
+      reply.status(400).send({
         message: error.message,
       });
     }

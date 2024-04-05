@@ -1,5 +1,5 @@
 export class EventAlreadyExistsError extends Error {
   constructor() {
-    super('Event already exists');
+    super('Another event with the same title already exists.');
   }
 }

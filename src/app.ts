@@ -1,5 +1,9 @@
 import cors from '@fastify/cors';
 import fastify from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 import { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 import { env } from './env/environment';
@@ -13,6 +17,9 @@ app.register(cors, {
 });
 
 app.register(eventsRoutes);
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
